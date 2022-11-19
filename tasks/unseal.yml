@@ -1,0 +1,54 @@
+---
+- name: vault.txt exists
+  ansible.builtin.stat:
+    path: "{{ docker_container_vault_volume_dir }}/vault.txt"
+  register: vault_txt_exist_result
+  when:
+    - docker_container_vault_auto_unseal
+
+- name: vault operator init
+  ansible.builtin.shell: |
+    sleep 5
+    docker exec vault vault operator init -format=json -n 1 -t 1 > {{ docker_container_vault_volume_dir }}/vault.txt
+  register: vault_operator_init_result
+  when: 
+    - docker_container_vault_auto_unseal
+    - not vault_txt_exist_result.stat.exists
+
+- name: vault operator init result 
+  ansible.builtin.debug:
+    msg: "{{ vault_operator_init_result.stdout }}"
+  when:
+    - vault_operator_init_result is defined
+    - vault_operator_init_result.stdout is defined
+
+- name: vault operator unseal 
+  ansible.builtin.shell: |
+    export unseal_key=$(cat {{ docker_container_vault_volume_dir }}/vault.txt | jq -r '.unseal_keys_b64[0]')
+    docker exec vault vault operator unseal ${unseal_key}
+  register: vault_operator_unseal_result
+  when: 
+    - docker_container_vault_auto_unseal
+
+- name: vault operator unseal result 
+  ansible.builtin.debug:
+    msg: "{{ vault_operator_unseal_result.stdout }}"
+  when:
+    - vault_operator_unseal_result is defined
+    - vault_operator_unseal_result.stdout is defined
+
+- name: vault token lookup 
+  ansible.builtin.shell: |
+    export VAULT_TOKEN=$(cat {{ docker_container_vault_volume_dir }}/vault.txt | jq -r '.root_token')
+    docker exec -e VAULT_TOKEN=${VAULT_TOKEN} vault vault token lookup
+  register: vault_token_lookup_result
+  when:
+    - docker_container_vault_auto_unseal
+
+- name: vault token lookup result 
+  ansible.builtin.debug:
+    msg: "{{ vault_token_lookup_result.stdout }}"
+  when:
+    - vault_token_lookup_result is defined
+    - vault_token_lookup_result.stdout is defined
+    

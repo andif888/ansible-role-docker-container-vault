@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  remote_user: root
+  vars:
+    docker_container_vault_auto_unseal: true
+    docker_container_vault_command: 'server'    
+    docker_container_vault_env:
+      VAULT_ADDR: "http://127.0.0.1:8202"
+      # VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8202"
+      VAULT_DEV_ROOT_TOKEN_ID: "myroot"
+      VAULT_LOCAL_CONFIG: '{"backend": {"file": {"path": "/vault/data"}}, "listener": {"tcp": {"address": "0.0.0.0:8202", "tls_disable": "true"}}, "default_lease_ttl": "168h", "max_lease_ttl": "720h", "ui": "true"}'
+
+  roles:
+    - ansible-role-docker-container-vault

@@ -1,0 +1,84 @@
+---
+# @tag docker-container-prereq-all:description: Ensure all pre-requisites are installed
+# @tag docker-container-prereq-vault:description: Ensure all pre-requisites for vault are installed
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/prereq.yml"
+  tags:
+    - docker-container-prereq-all
+    - docker-container-prereq-vault
+
+# @tag docker-container-restore-all:description: Run restic restore for all restic enabled containers.
+# @tag docker-container-restore-vault:description: Run restic restore for vault if restic is enabled.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/restore.yml"
+  tags:
+    - never
+    - docker-container-restore-all
+    - docker-container-restore-vault
+  when:
+    - docker_container_vault_restic_enable
+
+# @tag docker-container-setup-all:description: Run setup task for all containers.
+# @tag docker-container-setup-vault:description: Run setup task for vault.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup.yml"
+  tags:
+    - docker-container-setup-all
+    - docker-container-setup-vault
+    - docker-container-restore-all
+    - docker-container-restore-vault
+
+# @tag docker-container-unseal-vault:description: Run unseal task for vault.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/unseal.yml"
+  tags:
+    - docker-container-setup-all
+    - docker-container-setup-vault
+    - docker-container-restore-all
+    - docker-container-restore-vault
+    - docker-container-unseal-vault
+
+# @tag docker-container-backup-init-all:description: Run init backup task for all container.
+# @tag docker-container-backup-init-vault:description: Run init backup task for vault if restic is enabled.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/backup_init.yml"
+  tags:
+    - docker-container-setup-all
+    - docker-container-setup-vault
+    - docker-container-backup-init-all
+    - docker-container-backup-init-vault
+  when:
+    - docker_container_vault_restic_enable
+
+# @tag docker-container-remove-all:description: Remove all containers.
+# @tag docker-container-remove-vault:description: Remove vault.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/remove.yml"
+  tags:
+    - never
+    - docker-container-remove-all
+    - docker-container-remove-vault
+    - docker-container-purge-all
+    - docker-container-purge-vault
+
+# @tag docker-container-purge-all:description: Remove all containers and delete volume mounts.
+# @tag docker-container-purge-vault:description: Remove vault and delete volume mounts.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/purge.yml"
+  tags:
+    - never
+    - docker-container-purge-all
+    - docker-container-purge-vault
+
+# @tag docker-container-backup-all:description: Backup all containers' volume mounts.
+# @tag docker-container-backup-vault:description: Backup vault volume mounts.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/backup.yml"
+  tags:
+    - never
+    - docker-container-backup-all
+    - docker-container-backup-vault
+  when:
+    - docker_container_vault_restic_enable
+
+# @tag docker-container-backup-list-all:description: List all containers' backups.
+# @tag docker-container-backup-list-vault:description: List vault backups.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/backup_list.yml"
+  tags:
+    - never
+    - docker-container-backup-list-all
+    - docker-container-backup-list-vault
+  when:
+    - docker_container_vault_restic_enable
