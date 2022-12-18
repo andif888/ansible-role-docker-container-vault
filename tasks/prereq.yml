@@ -2,3 +2,8 @@
 - name: Install docker python sdk
   ansible.builtin.pip:
     name: docker
+
+- name: Install jq
+  ansible.builtin.apt:
+    name: jq
+    state: present
