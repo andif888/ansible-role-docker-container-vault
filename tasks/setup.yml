@@ -11,13 +11,12 @@
 - name: docker_image pull {{ docker_image_vault_name }}
   community.docker.docker_image:
     name: '{{ docker_image_vault_name }}'
-    force_source: true
     source: pull
     # Select platform for pulling. If not specified, will pull whatever docker prefers.
     pull:
       platform: amd64
   when: 
-    - docker_image_vault_pull is defined
+    - docker_image_vault_pull
 
 - name: docker_network {{ docker_container_vault_name }}
   community.docker.docker_network:
