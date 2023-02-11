@@ -11,6 +11,7 @@
 - name: docker_image pull {{ docker_image_vault_name }}
   community.docker.docker_image:
     name: '{{ docker_image_vault_name }}'
+    force_source: true
     source: pull
     # Select platform for pulling. If not specified, will pull whatever docker prefers.
     pull:
@@ -31,6 +32,7 @@
 - name: docker_container {{ docker_container_vault_name }}
   community.docker.docker_container:
     name: "{{ docker_container_vault_name }}"
+    comparisons: "{{ docker_container_vault_comparisons }}"
     image: "{{ docker_container_vault_image }}"
     state: "{{ docker_container_vault_state | default('started') }}"
     recreate: "{{ docker_container_vault_recreate | default('no') }}"
@@ -56,7 +58,6 @@
     networks_cli_compatible: "{{ docker_container_vault_networks_cli_compatible | default('yes') }}"
     network_mode: "{{ docker_network_vault_name }}"
     pull: "{{ docker_container_vault_pull | default('no') }}"
-    purge_networks: "{{ docker_container_vault_purge_networks | default('yes') }}"
     networks: "{{ docker_container_vault_networks }}"
     published_ports: "{{ docker_container_vault_ports | default(omit) }}"
     # user: "{{ docker_container_vault_user | default(omit) }}"

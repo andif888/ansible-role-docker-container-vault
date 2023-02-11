@@ -85,6 +85,15 @@ docker_container_vault_networks:
 docker_container_vault_ports:
   - "8200:8200"
 
+# @var docker_container_vault_comparisons:description: >
+# Allows to specify how properties of existing containers are compared with module options 
+# to decide whether the container should be recreated / updated or not.
+# @end
+docker_container_vault_comparisons:
+  image: strict
+  env: strict
+  volumes: strict
+
 # docker_container_vault_auto_remove: no
 # docker_container_vault_detach: yes
 # docker_container_vault_env_file: "{{ docker_container_vault_volume_dir }}/.env"
@@ -95,7 +104,6 @@ docker_container_vault_ports:
 # docker_container_vault_paused: no
 # docker_container_vault_privileged: no
 # docker_container_vault_pull: no
-# docker_container_vault_purge_networks: yes
 # docker_container_vault_read_only: no
 # docker_container_vault_recreate: no
 # docker_container_vault_restart: no
