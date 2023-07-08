@@ -6,7 +6,7 @@
 # ------------
 
 # @var docker_image_vault_name:description: Repository path and tag for the container image.
-docker_image_vault_name: "vault"
+docker_image_vault_name: "hashicorp/vault"
 
 # @var docker_image_vault_pull:description: Indicate to always pull the docker image.
 docker_image_vault_pull: false
