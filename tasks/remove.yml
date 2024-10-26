@@ -3,7 +3,7 @@
   docker_container: 
     name: "{{ docker_container_vault_name }}"    
     container_default_behavior: no_defaults
-    keep_volumes: "{{ docker_container_vault_keep_volumes | default('yes') }}"
+    keep_volumes: "{{ docker_container_vault_keep_volumes | default(true) }}"
     state: absent
 
 - name: remove_docker_network {{ docker_network_vault_name }}
