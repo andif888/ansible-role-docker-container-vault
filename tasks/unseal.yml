@@ -22,6 +22,10 @@
     - vault_operator_init_result is defined
     - vault_operator_init_result.stdout is defined
 
+- name: Pause for 10 seconds to build app cache
+  ansible.builtin.pause:
+    seconds: 10
+
 - name: vault operator unseal 
   ansible.builtin.shell: |
     export unseal_key=$(cat {{ docker_container_vault_volume_dir }}/vault.txt | jq -r '.unseal_keys_b64[0]')

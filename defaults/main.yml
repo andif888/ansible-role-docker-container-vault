@@ -47,6 +47,7 @@ docker_container_vault_capabilities:
 docker_container_vault_env:
   VAULT_ADDR: "http://127.0.0.1:8200"
   VAULT_LOCAL_CONFIG: '{"backend": {"file": {"path": "/vault/data"}}, "listener": {"tcp": {"address": "0.0.0.0:8200", "tls_disable": "true"}}, "default_lease_ttl": "168h", "max_lease_ttl": "720h", "ui": "true"}'
+  SKIP_SETCAP: "true"
 
 # @var docker_container_vault_volumes:description: >
 # List of volumes to mount within the container.
