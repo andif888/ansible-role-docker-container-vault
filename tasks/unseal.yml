@@ -6,6 +6,10 @@
   when:
     - docker_container_vault_auto_unseal
 
+- name: Pause for 10 seconds to let container start
+  ansible.builtin.pause:
+    seconds: 10
+
 - name: vault operator init
   ansible.builtin.shell: |
     sleep 5
