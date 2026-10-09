@@ -6,7 +6,7 @@
     owner: "100"
     group: "1000"
     state: directory
-  loop: ["data", "policies"]
+  loop: ["config", "data", "logs", "policies"]
 
 - name: docker_image pull {{ docker_image_vault_name }}
   community.docker.docker_image:
